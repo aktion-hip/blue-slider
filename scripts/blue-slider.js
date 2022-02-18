@@ -47,8 +47,8 @@ text {
 circle.selected {
     fill: {{select-color}};
 }
-rect {
-    fill: #000;
+text {
+    fill: {{color}};
 }
 `;
 
@@ -90,6 +90,12 @@ class BlueSlider extends HTMLElement {
         // select-color (default: blue)
         if (!this.hasAttribute('select-color')) {
             this.setAttribute('select-color', '#6fa5eb');
+        }
+        // feedback (default: emtpy)
+        if (this.hasAttribute('feedback')) {
+            this.setAttribute('feedback', '');
+        } else {
+            this.removeAttribute('feedback');
         }
         // value
         const min = this.getAttribute('min');
@@ -170,9 +176,11 @@ class BlueSlider extends HTMLElement {
         this.deselect(parent);
         this.setAttribute('value', circle.dataset.value);
         circle.classList.add("selected");
-        const feedbackEl = parent.parentNode.getElementsByClassName("feedback")[0].getElementsByTagName("text")[0];
-        feedbackEl.textContent = circle.dataset.value;
-        feedbackEl.style.display = "inline";         
+        if (this.hasAttribute('feedback')) {
+            const feedbackEl = parent.parentNode.getElementsByClassName("feedback")[0].getElementsByTagName("text")[0];
+            feedbackEl.textContent = circle.dataset.value;
+            feedbackEl.style.display = "inline";         
+        }
     }
 
     deselect(parent) {
