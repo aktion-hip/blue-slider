@@ -1,4 +1,3 @@
-// https://alligator.io/web-components/attributes-properties/
 const svgNS = "http://www.w3.org/2000/svg";
 const svgTmpl = document.createElement('template');
 svgTmpl.innerHTML = `
@@ -53,6 +52,9 @@ rect {
 }
 `;
 
+/**
+ * The custom html element code.
+ */
 class BlueSlider extends HTMLElement {
 
     constructor() {
@@ -90,7 +92,13 @@ class BlueSlider extends HTMLElement {
             this.setAttribute('select-color', '#6fa5eb');
         }
         // value
-        this.setAttribute('value', this.getAttribute('min') > 0 ? this.getAttribute('min') : 0);
+        const min = this.getAttribute('min');
+        const max = min + this.getAttribute('ticks') - 1;
+        if (this.hasAttribute('value')) {
+            this.setAttribute('value', this.getAttribute('value') >= min && this.getAttribute('value') <= max ? this.getAttribute('value') : min);
+        } else {
+            this.setAttribute('value', min > 0 ? min : 0);
+        }
         
         this.render(parseInt(this.getAttribute('ticks')), parseInt(this.getAttribute('min')), 
                     this.getAttribute('color'), this.getAttribute('select-color'));
@@ -172,24 +180,12 @@ class BlueSlider extends HTMLElement {
         circles.forEach(c => c.classList.remove("selected"));
     }
 
-    set ticks(newValue) {
-        this.setAttribute('ticks', newValue);
-    }
-
-    set min(newValue) {
-        this.setAttribute('min', newValue);
-    }
-
-    set color(newValue) {
-        this.setAttribute('color', newValue);
-    }
-
-    set selectColor(newValue) {
-        this.setAttribute('select-color', newValue);
-    }
-
     set value(newValue) {
         this.setAttribute('value', newValue);
+    }
+
+    get value() {
+        return parseInt(this.getAttribute('value'));
     }
 
 }
